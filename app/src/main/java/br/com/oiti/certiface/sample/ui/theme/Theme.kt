@@ -1,6 +1,5 @@
 package br.com.oiti.certiface.sample.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -10,17 +9,23 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import br.com.oiti.certiface.sample.ui.theme.BrandColors.Companion.PrimaryDark
+import br.com.oiti.certiface.sample.ui.theme.BrandColors.Companion.PrimaryPure
+import br.com.oiti.certiface.sample.ui.theme.HighlightColors.Companion.HighlightDark
+import br.com.oiti.certiface.sample.ui.theme.HighlightColors.Companion.HighlightPure
+import br.com.oiti.certiface.sample.ui.theme.NeutralColors.Companion.HighDark
+import br.com.oiti.certiface.sample.ui.theme.NeutralColors.Companion.HighPure
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = HighlightDark,
+    secondary = HighDark,
+    tertiary = PrimaryDark
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = HighlightPure,
+    secondary = HighPure,
+    tertiary = PrimaryPure
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

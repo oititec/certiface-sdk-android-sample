@@ -5,10 +5,14 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
@@ -21,10 +25,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.core.view.WindowInsetsControllerCompat
 import br.com.oiti.certiface.core.contracts.request.HubCoreRequestParams
 import br.com.oiti.certiface.core.manager.HubCallback
 import br.com.oiti.certiface.core.manager.HubManager
@@ -37,10 +45,13 @@ import br.com.oiti.certiface.core.providers.liveness.facetec.FacetecProvider
 import br.com.oiti.certiface.core.providers.liveness.facetec.FacetecProviderInterceptor
 import br.com.oiti.certiface.core.providers.liveness.liveness2d.Liveness2DProvider
 import br.com.oiti.certiface.core.providers.liveness.liveness2d.Liveness2DProviderInterceptor
+import br.com.oiti.certiface.sample.R.*
 import br.com.oiti.certiface.sample.ui.components.Button
 import br.com.oiti.certiface.sample.ui.components.FormDialog
 import br.com.oiti.certiface.sample.ui.components.LoadingDialog
 import br.com.oiti.certiface.sample.ui.theme.CertifacesdksampleTheme
+import br.com.oiti.certiface.sample.ui.theme.HighlightColors.Companion.HighlightPure
+import br.com.oiti.certiface.sample.ui.theme.NeutralColors.Companion.HighLight
 import br.com.oiti.certiface.sample.ui.theme.getDocCoreThemeBuilder
 import br.com.oiti.certiface.sample.ui.theme.getFacetecThemeBuilder
 import br.com.oiti.certiface.sample.ui.theme.getLiveness2DThemeBuilder
@@ -59,8 +70,8 @@ class MainActivity : ComponentActivity() {
     private val loadingState = mutableStateOf(false)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         checkIsOnline()
+        setStatusBarColor(HighlightPure)
 
         setContent {
             CertifacesdksampleTheme {
@@ -72,6 +83,12 @@ class MainActivity : ComponentActivity() {
             }
         }
         hubManagerLauncher = HubManagerLauncher(this)
+    }
+
+    private fun setStatusBarColor(color: Color) {
+        val windowInsetsController = WindowInsetsControllerCompat(window, window.decorView)
+        window.statusBarColor = color.toArgb()
+        windowInsetsController.isAppearanceLightStatusBars = false
     }
 
 
@@ -313,13 +330,33 @@ class MainActivity : ComponentActivity() {
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(ScrollState(0))
+                .background(color = HighLight)
         ) {
-            val (column) = createRefs()
+            val (logo, column) = createRefs()
+
+            Row(
+                modifier = Modifier
+                    .background(color = HighlightPure)
+                    .fillMaxWidth()
+                    .constrainAs(logo) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .padding(32.dp)) {
+                Image(
+                    painter = painterResource(id = drawable.brand_logo),
+                    contentDescription = "Logo",
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .fillMaxSize()
+                )
+            }
 
             Column(
                 modifier = Modifier
                     .constrainAs(column) {
-                        top.linkTo(parent.top)
+                        top.linkTo(logo.bottom, margin = 16.dp)
                         bottom.linkTo(parent.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
@@ -327,13 +364,13 @@ class MainActivity : ComponentActivity() {
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Button("Start Flow Default", action = { startFlowDefault() })
+                Button("Flow Default", action = { startFlowDefault() })
                 Spacer(modifier = Modifier.height(8.dp))
-                Button("Start Flow Custom", action = { startFlowCustom() })
+                Button("Flow Custom", action = { startFlowCustom() })
                 Spacer(modifier = Modifier.height(8.dp))
-                Button("Start Flow Interceptor Default", action = { startFlowInterceptorDefault() })
+                Button("Interceptor Default", action = { startFlowInterceptorDefault() })
                 Spacer(modifier = Modifier.height(8.dp))
-                Button("Start Flow Interceptor Custom", action = { startFlowInterceptorCustom() })
+                Button("Interceptor Custom", action = { startFlowInterceptorCustom() })
                 Spacer(modifier = Modifier.height(8.dp))
                 Button("Resume Flow", action = { resumeFlow() })
                 Spacer(modifier = Modifier.height(8.dp))
